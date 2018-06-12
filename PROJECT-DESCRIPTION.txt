@@ -1,0 +1,72 @@
+Vehicle Tracker Concept Project Description
+——————————————————————————————————————————————————————————————————————
+This is a narrative of my approach and intentions, followed by a detailed description of what I developed in the 9 day period I took, followed by additional comments.
+
+Code Location: https://github.com/latravis2018/ATA-Project.git
+
+Motivation
+——————————————————————————————————————————————————————————————————————
+My first thought for the project was to have the application do a google search and retrieve the first n-pages, gathering selected page information as the generated data for the database.
+
+Recalling a conversation with Scott during the interview, I decided the more practical subject domain of vehicle tracking was more interesting to me.
+
+The decision led to a fairly elaborate vision for the project. After describing the portion I actually developed, I want to describe what the full vision was and to express that I can complete it with more time. 
+
+Approach
+——————————————————————————————————————————————————————————————————————
+I decided early to use Java RESTful services. I wanted to use JPA, but had little exeperience with it and ended up giving into the straightforward but dated JDBC. As mentioned in the interview, I have not done a lot of HTML/javascipt user interfaces, so I only realized part of my vision. 
+
+Delivered
+——————————————————————————————————————————————————————————————————————
+The database contains the following tables:
+
+city_location	- list of geographic locations for the centers of cities
+city		- list of cities in the U.S. and Territories
+state		- list of states in the U.S. and Territories
+zip		- list of postal zipcodes of the U.S. and Territories
+city_state_zip	- link table for associating city with state and zip
+veh_make		- list of manufacturers of vehicles built since 1984
+veh_model	- list of models of vehicles built since 1984
+vehicle		- link table associating vehicle make, model, and year
+trip		- list of vehicle trip information, starting in a given city at a particular time
+trip_location	- the geographic locations and times associated with a vehicle in the trip table 
+
+Data Sources:
+
+- City/State/Zip Data:
+http://federalgovernmentzipcodes.us/
+- Vehicle info:
+https://www.fueleconomy.gov/feg/ws/index.shtml
+
+- Vehicle trip data is randomly generating using the city and state and vehicle reference data.
+
+All database data is loaded manually from CSV files.
+
+The user interface:
+
+The user is presented with a list of states that contain vehicle tracking data.
+The user selects a state to retrieve a list of cities within that state where we have tracking data.
+The user selects a city to retrieve trips/vehicles that were tracked*.
+The user selects a vehicle to see where the vehicle has been*.
+
+* Although the vehicle and location data is retrieved by the frontend, it is not presented. 
+
+The technology stack:
+- Jetty-hosted Java war application
+- Jersey REST services
+- PostgresSQL backend via JDBC
+- Google GSON for REST responses
+- Apache Commons CSV for data generation
+- Bootstrap and jQuery for the frontend
+
+
+The Vision
+——————————————————————————————————————————————————————————————————————
+The full realization of this concept is to track vehicles with street address data and state boundary data to track vehicles by street and to correctly identify the location for interstate travel. I found shape files for states (at https://www.census.gov/geo/maps-data/data/tiger-line.html), but understanding that file format is beyond the scope of this project. I also see the trip table expanded to identify trip sponsors.
+
+I also intended to display a dynamic google map, meaning when the page is first loaded, the full U.S. map is presented with markers where we have trip data. When a state is selected, the map changes to the state and all cities for which we have data are marked. When selecting a city, the map displays a zoomed-in area with markers for the starting points of all trips. Finally, when selecting a trip/vehicle, the map shows a route for the trip with all trip locations. Following is the URL for displaying such a map, but google sells embeded maps and prevents their display within a page. I want to test using a servlet to retrieve the page, setting headers to look like a browser request, to see if I can get the map and return the image data in the servlet response. I am very curious how google detects the map request is being embeded because the url works fine in the browser address.
+
+http://maps.google.com/maps/api/staticmap?center=United+States&zoom=3&size=512x512&maptype=roadmap
+http://maps.google.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=14&size=512x512&maptype=roadmap%20&markers=color:blue|label:S|40.702147,-74.015794&markers=color:green|label:1|40.711614,-74.012318%20&markers=color:red|label:2|40.718217,-73.998284&sensor=false
+
+I did not attempt to get street address data because I don't have nearly enough disk space ;-)
