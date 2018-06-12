@@ -1,2 +1,4 @@
 # ATA-Project
-Please see the Trullo card, as you requested ;-)
+Please read the PROJECT-DESCRIPTION.txt	and PROJECT-README.txt files
+Thanks,
+Larry
